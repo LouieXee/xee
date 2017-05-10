@@ -74,7 +74,7 @@ module.exports = function generate (type) {
             fs.copy(templatePath('component/webpack.config.publish.js'), destinationPath('webpack.config.publish.js'));
             fs.copyTpl(templatePath('component/package.json'), destinationPath('package.json'), answer)
             fs.copyTpl(templatePath('component/index.html'), destinationPath('index.html'), answer)
-            fs.write(description('.gitignore'), 'node_modules');
+            fs.write(destinationPath('.gitignore'), 'node_modules');
 
         } else if (type == 'project') {
 
@@ -88,7 +88,7 @@ module.exports = function generate (type) {
             fs.copy(templatePath('project/webpack.config.publish.js'), destinationPath('webpack.config.publish.js'));
             fs.copyTpl(templatePath('project/package.json'), destinationPath('package.json'), answer)
             fs.copyTpl(templatePath('project/index.html'), destinationPath('index.html'), answer)
-            fs.write(description('.gitignore'), 'node_modules');
+            fs.write(destinationPath('.gitignore'), 'node_modules');
 
         }
 
