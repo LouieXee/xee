@@ -67,11 +67,13 @@ module.exports = function generate (type) {
 
             fs.copy(templatePath('component/src'), destinationPath('src'));
             fs.copy(templatePath('component/res'), destinationPath('res'));
+            fs.copy(templatePath('component/test'), destinationPath('test'));
             fs.copy(templatePath('component/.babelrc'), destinationPath('.babelrc'));
+            fs.copy(templatePath('component/.eslintrc'), destinationPath('.eslintrc'));
             fs.copy(templatePath('component/gulpfile.js'), destinationPath('gulpfile.js'));
-            fs.copy(templatePath('component/webpack.config.base.js'), destinationPath('webpack.config.base.js'));
             fs.copy(templatePath('component/webpack.config.development.js'), destinationPath('webpack.config.development.js'));
             fs.copy(templatePath('component/webpack.config.publish.js'), destinationPath('webpack.config.publish.js'));
+            fs.copyTpl(templatePath('component/webpack.config.base.js'), destinationPath('webpack.config.base.js'), answer);
             fs.copyTpl(templatePath('component/package.json'), destinationPath('package.json'), answer)
             fs.copyTpl(templatePath('component/index.html'), destinationPath('index.html'), answer)
             fs.write(destinationPath('.gitignore'), 'node_modules');
@@ -82,6 +84,7 @@ module.exports = function generate (type) {
             fs.copy(templatePath('project/res'), destinationPath('res'));
             fs.copy(templatePath('project/data'), destinationPath('data'));
             fs.copy(templatePath('project/.babelrc'), destinationPath('.babelrc'));
+            fs.copy(templatePath('project/.eslintrc'), destinationPath('.eslintrc'));
             fs.copy(templatePath('project/gulpfile.js'), destinationPath('gulpfile.js'));
             fs.copy(templatePath('project/webpack.config.base.js'), destinationPath('webpack.config.base.js'));
             fs.copy(templatePath('project/webpack.config.development.js'), destinationPath('webpack.config.development.js'));

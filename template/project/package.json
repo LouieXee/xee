@@ -5,7 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "serve": "gulp serve",
-    "build": "gulp build"
+    "build": "gulp build",
+    "test": "exit 1",
+    "pack": "exit 1"
   },
   "author": "<%= author%>",
   "license": "ISC",

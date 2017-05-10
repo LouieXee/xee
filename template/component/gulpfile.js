@@ -4,11 +4,15 @@ const exec = require('child_process').exec;
 const path = require('path');
 
 const gulp = require('gulp');
+const babel = require('gulp-babel');
+const mocha = require('gulp-mocha');
 const del = require('del');
 const browserSync = require('browser-sync');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const ansiHtml = require('ansi-html');
+
+const MOCHA_TIMEOUT = 5000;
 
 gulp.task('clean', done => {
     return del(['./build/**/*']);
@@ -47,10 +51,35 @@ gulp.task('serve', () => {
 
 });
 
-gulp.task('build', ['clean'], () => {
+gulp.task('pack', ['clean'], () => {
     return new Promise((resolve, reject) => {
         exec('webpack --config ./webpack.config.publish.js', () => {
             resolve();
         })
     })
 })
+
+gulp.task('build', ['clean'], () => {
+    return gulp.src(path.resolve(process.cwd(), './src/**/*.js'))
+        .pipe(babel({
+            presets: ['es2015'],
+            plugins: [
+                'babel-plugin-add-module-exports'
+            ]
+        }))
+        .pipe(gulp.dest('build'));
+})
+
+gulp.task('test', done => {
+    gulp.src('test/**/*.js')
+    .pipe(mocha({
+        timeout: MOCHA_TIMEOUT
+    }))
+    .once('error', () => {
+        process.exit();
+    })
+    .once('end', () => {
+        process.exit();
+    })
+})
+
