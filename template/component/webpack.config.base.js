@@ -11,7 +11,7 @@ module.exports = {
     entry: path.resolve(__dirname, './src/index.js'),
 
     output: {
-        path: path.resolve(__dirname, '../build'),
+        path: path.resolve(__dirname, './build'),
         filename: 'bundle.js'
     },
 
@@ -20,7 +20,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'es3ify-loader!babel-loader'
+                loader: 'es3ify-loader!babel-loader!eslint-loader'
             },
             {
                 test: /\.styl$/,

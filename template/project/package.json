@@ -1,13 +1,13 @@
 {
-  "name": "temp",
-  "version": "1.0.0",
-  "description": "",
+  "name": "<%= name%>",
+  "version": "<%= version%>",
+  "description": "<%= desc%>",
   "main": "build/index.js",
   "scripts": {
     "serve": "gulp serve",
     "build": "gulp build"
   },
-  "author": "",
+  "author": "<%= author%>",
   "license": "ISC",
   "devDependencies": {
     "ansi-html": "0.0.7",
