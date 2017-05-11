@@ -1,7 +1,7 @@
 'use strict';
 
 const pkg = require('./package.json');
-const data = require('../data');
+const data = require('./data');
 
 const webpack = require('webpack');
 const path = require('path');
@@ -35,7 +35,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: extractCss.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader', 'less-loader', 'autoprefixer-loader?browsers=last 2 version']
+                    use: ['css-loader', 'autoprefixer-loader?browsers=last 2 version', 'stylus-loader']
                 })
             },
             {
