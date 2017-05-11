@@ -3,29 +3,31 @@
 const exec = require('child_process').exec;
 const path = require('path');
 
+const chalk = require('chalk');
 const gulp = require('gulp');
+const mocha = require('gulp-mocha');
 const babel = require('gulp-babel');
 const es3ify = require('gulp-es3ify');
-const mocha = require('gulp-mocha');
 const del = require('del');
 const browserSync = require('browser-sync');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const ansiHtml = require('ansi-html');
 
+const CURRENT_PATH = process.cwd();
 const MOCHA_TIMEOUT = 5000;
 
-gulp.task('clean', done => {
-    return del(['./build/**/*']);
+gulp.task('clean', () => {
+    return del([destinationPath('./build/**/*')]);
 });
 
 gulp.task('serve', () => {
     const bs = browserSync.create();
-    const compiler = webpack(require('./webpack.config.development.js'));
+    const compiler = webpack(require(destinationPath('./webpack.config.development.js')));
 
     bs.init({
         server: true,
-        files: ['./*.html'],
+        files: [destinationPath('./*.html')],
         middleware: [
             webpackDevMiddleware(compiler, {
                 noInfo: false,
@@ -52,16 +54,16 @@ gulp.task('serve', () => {
 
 });
 
-gulp.task('pack', ['clean'], () => {
-    return new Promise((resolve, reject) => {
-        exec('webpack --config ./webpack.config.publish.js', () => {
-            resolve();
-        })
+gulp.task('build', ['clean'], () => {
+    console.log(chalk.green.bold('start webpack-ing your files...'))
+    exec(`webpack --config ${destinationPath('./webpack.config.publish.js')}`, () => {
+        console.log(chalk.green.bold('webpack your files successfully!'))
     })
 })
 
-gulp.task('build', ['clean'], () => {
-    return gulp.src(path.resolve(process.cwd(), './src/**/*.js'))
+gulp.task('es3', ['clean'], () => {
+    console.log(chalk.green.bold('start es3ify-ing your files...'))
+    return gulp.src(destinationPath('./src/**/*.js'))
         .pipe(babel({
             presets: ['es2015'],
             plugins: [
@@ -69,11 +71,14 @@ gulp.task('build', ['clean'], () => {
             ]
         }))
         .pipe(es3ify())
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build'))
+        .on('end', function () {
+            console.log(chalk.green.bold('es3ify your files successfully!'))
+        });
 })
 
 gulp.task('test', done => {
-    gulp.src('test/**/*.js')
+    gulp.src(destinationPath('test/**/*.js'))
     .pipe(mocha({
         timeout: MOCHA_TIMEOUT
     }))
@@ -85,3 +90,6 @@ gulp.task('test', done => {
     })
 })
 
+function destinationPath (target) {
+    return path.resolve(CURRENT_PATH, target);
+}

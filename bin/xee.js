@@ -38,31 +38,8 @@ commander
     });
 
 commander
-    .command('serve')
-    .description('development your code')
-    .action(function () {
-        utils.exec('npm', ['run', 'serve']);
-    });
+    .command('run [name]', 'run specified task');
 
-commander
-    .command('build')
-    .option('-n, --node', 'build your code into node modules')
-    .option('-f, --file', 'build your code into a single file')
-    .description('build your code')
-    .action(function (option) {
-        if (option.file) {
-            utils.exec('npm', ['run', 'pack'])
-        } else {
-            utils.exec('npm', ['run', 'build'])
-        }
-    });
-
-commander
-    .command('test')
-    .description('test your code')
-    .action(function () {
-        utils.exec('npm', ['run', 'test'])
-    });
 
 commander.parse(process.argv);
 
