@@ -61,9 +61,6 @@ module.exports = {
 
     plugins: [
         extractCss,
-        htmlIndex,
-        new webpack.DefinePlugin({
-            VERSION: JSON.stringify(pkg.version)
-        })
+        htmlIndex
     ]
 };

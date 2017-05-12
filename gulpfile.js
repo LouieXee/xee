@@ -55,14 +55,16 @@ gulp.task('serve', () => {
 });
 
 gulp.task('build', ['clean'], () => {
-    console.log(chalk.green.bold('start webpack-ing your files...'))
+    console.log(chalk.green.bold('start webpack-ing your files'));
+    console.log('...');
     exec(`webpack --config ${destinationPath('./webpack.config.publish.js')}`, () => {
-        console.log(chalk.green.bold('webpack your files successfully!'))
-    })
+        console.log(chalk.green.bold('webpack your files successfully!'));
+    });
 })
 
 gulp.task('es3', ['clean'], () => {
-    console.log(chalk.green.bold('start es3ify-ing your files...'))
+    console.log(chalk.green.bold('start es3ify-ing your files'));
+    console.log('...');
     return gulp.src(destinationPath('./src/**/*.js'))
         .pipe(babel({
             presets: ['es2015'],
@@ -73,7 +75,7 @@ gulp.task('es3', ['clean'], () => {
         .pipe(es3ify())
         .pipe(gulp.dest('build'))
         .on('end', function () {
-            console.log(chalk.green.bold('es3ify your files successfully!'))
+            console.log(chalk.green.bold('es3ify your files successfully!'));
         });
 })
 
