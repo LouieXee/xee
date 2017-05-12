@@ -14,20 +14,21 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const ansiHtml = require('ansi-html');
 
-const CURRENT_PATH = process.cwd();
+const utils = require('./utils');
+
 const MOCHA_TIMEOUT = 5000;
 
 gulp.task('clean', () => {
-    return del([destinationPath('./build/**/*')]);
+    return del([utils.destinationPath('./build/**/*')]);
 });
 
 gulp.task('serve', () => {
     const bs = browserSync.create();
-    const compiler = webpack(require(destinationPath('./webpack.config.development.js')));
+    const compiler = webpack(require(utils.destinationPath('./webpack.config.development.js')));
 
     bs.init({
         server: true,
-        files: [destinationPath('./*.html')],
+        files: [utils.destinationPath('./*.html')],
         middleware: [
             webpackDevMiddleware(compiler, {
                 noInfo: false,
@@ -55,17 +56,17 @@ gulp.task('serve', () => {
 });
 
 gulp.task('build', ['clean'], () => {
-    console.log(chalk.green.bold('start webpack-ing your files'));
-    console.log('...');
-    exec(`webpack --config ${destinationPath('./webpack.config.publish.js')}`, () => {
+    console.log(chalk.green.bold('start webpack-ing your files...'));
+
+    let compiler = webpack(require(utils.destinationPath('./webpack.config.publish.js')));
+    compiler.run(() => {
         console.log(chalk.green.bold('webpack your files successfully!'));
-    });
+    })
 })
 
 gulp.task('es3', ['clean'], () => {
-    console.log(chalk.green.bold('start es3ify-ing your files'));
-    console.log('...');
-    return gulp.src(destinationPath('./src/**/*.js'))
+    console.log(chalk.green.bold('start es3ify-ing your files...'));
+    return gulp.src(utils.destinationPath('./src/**/*.js'))
         .pipe(babel({
             presets: ['es2015'],
             plugins: [
@@ -80,7 +81,7 @@ gulp.task('es3', ['clean'], () => {
 })
 
 gulp.task('test', done => {
-    gulp.src(destinationPath('test/**/*.js'))
+    gulp.src(utils.destinationPath('test/**/*.js'))
     .pipe(mocha({
         timeout: MOCHA_TIMEOUT
     }))
@@ -91,7 +92,3 @@ gulp.task('test', done => {
         process.exit();
     })
 })
-
-function destinationPath (target) {
-    return path.resolve(CURRENT_PATH, target);
-}

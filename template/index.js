@@ -70,34 +70,34 @@ module.exports = function generate (type) {
     }).then(answer => {
         if (type == 'component') {
 
-            fs.copy(templatePath('component/src'), destinationPath('src'));
-            fs.copy(templatePath('component/res'), destinationPath('res'));
-            fs.copy(templatePath('component/test'), destinationPath('test'));
-            fs.copy(templatePath('component/.babelrc'), destinationPath('.babelrc'));
-            fs.copy(templatePath('component/.eslintrc'), destinationPath('.eslintrc'));
-            fs.copy(templatePath('component/webpack.config.development.js'), destinationPath('webpack.config.development.js'));
-            fs.copy(templatePath('component/webpack.config.publish.js'), destinationPath('webpack.config.publish.js'));
-            fs.copyTpl(templatePath('component/webpack.config.base.js'), destinationPath('webpack.config.base.js'), answer);
-            fs.copyTpl(templatePath('component/package.json'), destinationPath('package.json'), answer)
-            fs.copyTpl(templatePath('component/index.html'), destinationPath('index.html'), answer)
-            fs.write(destinationPath('.gitignore'), `
+            fs.copy(utils.currentPath('component/src'), utils.destinationPath('src'));
+            fs.copy(utils.currentPath('component/res'), utils.destinationPath('res'));
+            fs.copy(utils.currentPath('component/test'), utils.destinationPath('test'));
+            fs.copy(utils.currentPath('component/.babelrc'), utils.destinationPath('.babelrc'));
+            fs.copy(utils.currentPath('component/.eslintrc'), utils.destinationPath('.eslintrc'));
+            fs.copy(utils.currentPath('component/webpack.config.development.js'), utils.destinationPath('webpack.config.development.js'));
+            fs.copy(utils.currentPath('component/webpack.config.publish.js'), utils.destinationPath('webpack.config.publish.js'));
+            fs.copyTpl(utils.currentPath('component/webpack.config.base.js'), utils.destinationPath('webpack.config.base.js'), answer);
+            fs.copyTpl(utils.currentPath('component/package.json'), utils.destinationPath('package.json'), answer)
+            fs.copyTpl(utils.currentPath('component/index.html'), utils.destinationPath('index.html'), answer)
+            fs.write(utils.destinationPath('.gitignore'), `
                 node_modules
                 npm-debug.log
             `);
 
         } else if (type == 'project') {
 
-            fs.copy(templatePath('project/src'), destinationPath('src'));
-            fs.copy(templatePath('project/res'), destinationPath('res'));
-            fs.copy(templatePath('project/data'), destinationPath('data'));
-            fs.copy(templatePath('project/.babelrc'), destinationPath('.babelrc'));
-            fs.copy(templatePath('project/.eslintrc'), destinationPath('.eslintrc'));
-            fs.copy(templatePath('project/webpack.config.base.js'), destinationPath('webpack.config.base.js'));
-            fs.copy(templatePath('project/webpack.config.development.js'), destinationPath('webpack.config.development.js'));
-            fs.copy(templatePath('project/webpack.config.publish.js'), destinationPath('webpack.config.publish.js'));
-            fs.copyTpl(templatePath('project/package.json'), destinationPath('package.json'), answer)
-            fs.copyTpl(templatePath('project/index.html'), destinationPath('index.html'), answer)
-            fs.write(destinationPath('.gitignore'), `
+            fs.copy(utils.currentPath('project/src'), utils.destinationPath('src'));
+            fs.copy(utils.currentPath('project/res'), utils.destinationPath('res'));
+            fs.copy(utils.currentPath('project/data'), utils.destinationPath('data'));
+            fs.copy(utils.currentPath('project/.babelrc'), utils.destinationPath('.babelrc'));
+            fs.copy(utils.currentPath('project/.eslintrc'), utils.destinationPath('.eslintrc'));
+            fs.copy(utils.currentPath('project/webpack.config.base.js'), utils.destinationPath('webpack.config.base.js'));
+            fs.copy(utils.currentPath('project/webpack.config.development.js'), utils.destinationPath('webpack.config.development.js'));
+            fs.copy(utils.currentPath('project/webpack.config.publish.js'), utils.destinationPath('webpack.config.publish.js'));
+            fs.copyTpl(utils.currentPath('project/package.json'), utils.destinationPath('package.json'), answer)
+            fs.copyTpl(utils.currentPath('project/index.html'), utils.destinationPath('index.html'), answer)
+            fs.write(utils.destinationPath('.gitignore'), `
                 node_modules
                 npm-debug.log
             `);
@@ -113,12 +113,4 @@ module.exports = function generate (type) {
         });
     })
 
-}
-
-function templatePath (target) {
-    return path.resolve(__dirname, target);
-}
-
-function destinationPath (target) {
-    return path.resolve(process.cwd(), target);
 }

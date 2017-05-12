@@ -34,7 +34,9 @@ commander
     .description('detect the dependencies on your system')
     .action(function () {
         detectLatestVersion()
-        detect();
+        .then(() => {
+            detect();
+        })
     });
 
 commander
@@ -44,10 +46,17 @@ commander
 commander.parse(process.argv);
 
 function detectLatestVersion () {
-    latestVersion('xee').then(latest => {
+    
+    console.log('');
+    console.log(chalk.blue.bold('Detecting if xee has a new version'));
+    console.log('');
+
+    return latestVersion('xee').then(latest => {
         if (semver.lt(pkg.version, latest)) {
             console.log('Xee has a new version, please update xee.')
             console.log('You can try ' + chalk.yellow.bold('npm update xee -g'));
+        } else {
+            console.log(chalk.green.bold('Your xee is the latest version!'))
         }
     })
 }
