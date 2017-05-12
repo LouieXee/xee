@@ -14,7 +14,6 @@ const browserSync = require('browser-sync');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const ansiHtml = require('ansi-html');
-const assgin = require('object-assign');
 
 const utils = require('./utils');
 const destinationPkg = require(utils.destinationPath('./package.json'));
@@ -32,17 +31,15 @@ gulp.task('clean', () => {
 
 gulp.task('serve', () => {
     let bs = browserSync.create();
-    let customWebpackConfig = {};
+    let compiler = null
+    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.development.js'));
     let customWebpackConfigPath = utils.destinationPath('./webpack.config.development.js');
 
     if (fs.existsSync(customWebpackConfigPath)) {
-        customWebpackConfig = require(customWebpackConfigPath);
+        compiler = webpack(require(customWebpackConfigPath)(originWebpackConfig));
+    } else {
+        compiler = webpack(originWebpackConfig);
     }
-
-    let compiler = webpack(assgin(
-        require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.development.js')), 
-        customWebpackConfig
-    ));
 
     bs.init({
         server: true,
@@ -76,19 +73,17 @@ gulp.task('serve', () => {
 gulp.task('build', ['clean'], () => {
     console.log(chalk.green.bold('start webpack-ing your files...'));
 
-    let customWebpackConfig = {};
+    let compiler = null
+    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.publish.js'));
     let customWebpackConfigPath = utils.destinationPath('./webpack.config.publish.js');
 
+    destinationType == 'component' && (originWebpackConfig.output.library = destinationPkg.name);
+
     if (fs.existsSync(customWebpackConfigPath)) {
-        customWebpackConfig = require(customWebpackConfigPath);
+        compiler = webpack(require(customWebpackConfigPath)(originWebpackConfig));
+    } else {
+        compiler = webpack(originWebpackConfig);
     }
-
-    destinationType == 'component' && (customWebpackConfig.output.library = destinationPkg.name);
-
-    let compiler = webpack(assgin(
-        require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.publish.js')), 
-        customWebpackConfig
-    ));
 
     compiler.run(() => {
         console.log(chalk.green.bold('webpack your files successfully!'));
