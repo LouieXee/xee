@@ -70,16 +70,12 @@ module.exports = function generate (type) {
     }).then(answer => {
         if (type == 'component') {
 
-            fs.copy(utils.currentPath('component/src'), utils.destinationPath('src'));
-            fs.copy(utils.currentPath('component/res'), utils.destinationPath('res'));
-            fs.copy(utils.currentPath('component/test'), utils.destinationPath('test'));
-            fs.copy(utils.currentPath('component/.babelrc'), utils.destinationPath('.babelrc'));
-            fs.copy(utils.currentPath('component/.eslintrc'), utils.destinationPath('.eslintrc'));
-            fs.copy(utils.currentPath('component/webpack.config.development.js'), utils.destinationPath('webpack.config.development.js'));
-            fs.copy(utils.currentPath('component/webpack.config.publish.js'), utils.destinationPath('webpack.config.publish.js'));
-            fs.copyTpl(utils.currentPath('component/webpack.config.base.js'), utils.destinationPath('webpack.config.base.js'), answer);
-            fs.copyTpl(utils.currentPath('component/package.json'), utils.destinationPath('package.json'), answer)
-            fs.copyTpl(utils.currentPath('component/index.html'), utils.destinationPath('index.html'), answer)
+            fs.copy(utils.currentPath('./template/component/src'), utils.destinationPath('src'));
+            fs.copy(utils.currentPath('./template/component/res'), utils.destinationPath('res'));
+            fs.copy(utils.currentPath('./template/component/test'), utils.destinationPath('test'));
+            fs.copy(utils.currentPath('./template/component/.eslintrc'), utils.destinationPath('.eslintrc'));
+            fs.copyTpl(utils.currentPath('./template/component/package.json'), utils.destinationPath('package.json'), answer)
+            fs.copyTpl(utils.currentPath('./template/component/index.html'), utils.destinationPath('index.html'), answer)
             fs.write(utils.destinationPath('.gitignore'), `
                 node_modules
                 npm-debug.log
@@ -87,16 +83,12 @@ module.exports = function generate (type) {
 
         } else if (type == 'project') {
 
-            fs.copy(utils.currentPath('project/src'), utils.destinationPath('src'));
-            fs.copy(utils.currentPath('project/res'), utils.destinationPath('res'));
-            fs.copy(utils.currentPath('project/data'), utils.destinationPath('data'));
-            fs.copy(utils.currentPath('project/.babelrc'), utils.destinationPath('.babelrc'));
-            fs.copy(utils.currentPath('project/.eslintrc'), utils.destinationPath('.eslintrc'));
-            fs.copy(utils.currentPath('project/webpack.config.base.js'), utils.destinationPath('webpack.config.base.js'));
-            fs.copy(utils.currentPath('project/webpack.config.development.js'), utils.destinationPath('webpack.config.development.js'));
-            fs.copy(utils.currentPath('project/webpack.config.publish.js'), utils.destinationPath('webpack.config.publish.js'));
-            fs.copyTpl(utils.currentPath('project/package.json'), utils.destinationPath('package.json'), answer)
-            fs.copyTpl(utils.currentPath('project/index.html'), utils.destinationPath('index.html'), answer)
+            fs.copy(utils.currentPath('./template/project/src'), utils.destinationPath('src'));
+            fs.copy(utils.currentPath('./template/project/res'), utils.destinationPath('res'));
+            fs.copy(utils.currentPath('./template/project/data'), utils.destinationPath('data'));
+            fs.copy(utils.currentPath('./template/project/.eslintrc'), utils.destinationPath('.eslintrc'));
+            fs.copyTpl(utils.currentPath('./template/project/package.json'), utils.destinationPath('package.json'), answer)
+            fs.copyTpl(utils.currentPath('./template/project/index.html'), utils.destinationPath('index.html'), answer)
             fs.write(utils.destinationPath('.gitignore'), `
                 node_modules
                 npm-debug.log
@@ -105,11 +97,11 @@ module.exports = function generate (type) {
         }
 
         fs.commit(function () {
-            console.log('');
-            console.log(chalk.blue.bold('Start installing node modules!'));
-            console.log('');
+            // console.log('');
+            // console.log(chalk.blue.bold('Start installing node modules!'));
+            // console.log('');
             
-            utils.exec('npm', ['install']);
+            // utils.exec('npm', ['install']);
         });
     })
 

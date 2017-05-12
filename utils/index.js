@@ -8,7 +8,7 @@ const DESTINATION_PATH = process.cwd();
 module.exports = {
 
     currentPath (target) {
-        return path.resolve(__dirname, target);
+        return path.resolve(__dirname, '../', target);
     },
 
     destinationPath (target) {

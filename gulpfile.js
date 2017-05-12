@@ -2,6 +2,7 @@
 
 const exec = require('child_process').exec;
 const path = require('path');
+const fs = require('fs');
 
 const chalk = require('chalk');
 const gulp = require('gulp');
@@ -13,18 +14,35 @@ const browserSync = require('browser-sync');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const ansiHtml = require('ansi-html');
+const assgin = require('object-assign');
 
 const utils = require('./utils');
+const destinationPkg = require(utils.destinationPath('./package.json'));
+const destinationType = destinationPkg.xeeType;
 
 const MOCHA_TIMEOUT = 5000;
+const TYPE_PATH_CONFIG = {
+    component: './config/component/',
+    project: './config/project/'
+};
 
 gulp.task('clean', () => {
     return del([utils.destinationPath('./build/**/*')]);
 });
 
 gulp.task('serve', () => {
-    const bs = browserSync.create();
-    const compiler = webpack(require(utils.destinationPath('./webpack.config.development.js')));
+    let bs = browserSync.create();
+    let customWebpackConfig = {};
+    let customWebpackConfigPath = utils.destinationPath('./webpack.config.development.js');
+
+    if (fs.existsSync(customWebpackConfigPath)) {
+        customWebpackConfig = require(customWebpackConfigPath);
+    }
+
+    let compiler = webpack(assgin(
+        require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.development.js')), 
+        customWebpackConfig
+    ));
 
     bs.init({
         server: true,
@@ -58,7 +76,20 @@ gulp.task('serve', () => {
 gulp.task('build', ['clean'], () => {
     console.log(chalk.green.bold('start webpack-ing your files...'));
 
-    let compiler = webpack(require(utils.destinationPath('./webpack.config.publish.js')));
+    let customWebpackConfig = {};
+    let customWebpackConfigPath = utils.destinationPath('./webpack.config.publish.js');
+
+    if (fs.existsSync(customWebpackConfigPath)) {
+        customWebpackConfig = require(customWebpackConfigPath);
+    }
+
+    destinationType == 'component' && (customWebpackConfig.output.library = destinationPkg.name);
+
+    let compiler = webpack(assgin(
+        require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.publish.js')), 
+        customWebpackConfig
+    ));
+
     compiler.run(() => {
         console.log(chalk.green.bold('webpack your files successfully!'));
     })
@@ -68,10 +99,12 @@ gulp.task('es3', ['clean'], () => {
     console.log(chalk.green.bold('start es3ify-ing your files...'));
     return gulp.src(utils.destinationPath('./src/**/*.js'))
         .pipe(babel({
-            presets: ['es2015'],
-            plugins: [
-                'babel-plugin-add-module-exports'
-            ]
+            presets: ['es2015'].map((item) => {
+                return require.resolve('babel-preset-' + item);
+            }),
+            plugins: ['add-module-exports'].map((item) => {
+                return require.resolve('babel-plugin-' + item);
+            })
         }))
         .pipe(es3ify())
         .pipe(gulp.dest('build'))
