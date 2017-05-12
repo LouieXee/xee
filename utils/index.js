@@ -7,6 +7,10 @@ const DESTINATION_PATH = process.cwd();
 
 module.exports = {
 
+    isFunction (target) {
+        return _getType(target) == '[object Function]';
+    },
+
     currentPath (target) {
         return path.resolve(__dirname, '../', target);
     },
@@ -23,3 +27,7 @@ module.exports = {
     }
 
 };
+
+function _getType (target) {
+    return Object.prototype.toString.call(target);
+}

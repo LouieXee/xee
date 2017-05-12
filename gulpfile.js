@@ -31,16 +31,8 @@ gulp.task('clean', () => {
 
 gulp.task('serve', () => {
     let bs = browserSync.create();
-    let compiler = null
-    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.development.js'));
-    let customWebpackConfigPath = utils.destinationPath('./webpack.config.development.js');
-
-    if (fs.existsSync(customWebpackConfigPath)) {
-        compiler = webpack(require(customWebpackConfigPath)(originWebpackConfig));
-    } else {
-        compiler = webpack(originWebpackConfig);
-    }
-
+    let compiler = _getCompiler('webpack.config.development.js');
+    
     bs.init({
         server: true,
         files: [utils.destinationPath('./*.html')],
@@ -73,19 +65,7 @@ gulp.task('serve', () => {
 gulp.task('build', ['clean'], () => {
     console.log(chalk.green.bold('start webpack-ing your files...'));
 
-    let compiler = null
-    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + 'webpack.config.publish.js'));
-    let customWebpackConfigPath = utils.destinationPath('./webpack.config.publish.js');
-
-    destinationType == 'component' && (originWebpackConfig.output.library = destinationPkg.name);
-
-    if (fs.existsSync(customWebpackConfigPath)) {
-        compiler = webpack(require(customWebpackConfigPath)(originWebpackConfig));
-    } else {
-        compiler = webpack(originWebpackConfig);
-    }
-
-    compiler.run(() => {
+    _getCompiler('webpack.config.publish.js').run(() => {
         console.log(chalk.green.bold('webpack your files successfully!'));
     })
 })
@@ -120,3 +100,22 @@ gulp.task('test', done => {
         process.exit();
     })
 })
+
+function _getCompiler (configPath) {
+    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + configPath));
+    let customWebpackConfigPath = utils.destinationPath(configPath);
+
+    destinationType == 'component' && (originWebpackConfig.output.library = destinationPkg.name);
+
+    if (fs.existsSync(customWebpackConfigPath)) {
+        let customWebpackConfig = require(customWebpackConfigPath);
+
+        if (utils.isFunction(customWebpackConfig)) {
+            return webpack(customWebpackConfig(originWebpackConfig));
+        } else {
+            return webpack(customWebpackConfig);
+        }
+    } else {
+        return webpack(originWebpackConfig);
+    }
+}
