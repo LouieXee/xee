@@ -32,11 +32,10 @@ gulp.task('clean', () => {
 
 gulp.task('serve', () => {
     let bs = browserSync.create();
-    let compiler = _getCompiler('webpack.config.development.js');
+    let compiler = webpack(_getWebpackConfig('webpack.config.development.js'));
     
     bs.init({
         server: true,
-        files: [utils.destinationPath('./*.html')],
         middleware: [
             webpackDevMiddleware(compiler, {
                 noInfo: false,
@@ -66,7 +65,7 @@ gulp.task('serve', () => {
 gulp.task('build', ['clean'], () => {
     console.log(chalk.green.bold('start webpack-ing your files...'));
 
-    _getCompiler('webpack.config.publish.js').run(() => {
+    webpack(_getWebpackConfig('webpack.config.publish.js')).run(() => {
         console.log(chalk.green.bold('webpack your files successfully!'));
     })
 })
@@ -90,7 +89,7 @@ gulp.task('es3', ['clean'], () => {
 })
 
 gulp.task('test', done => {
-    gulp.src(utils.destinationPath('test/**/*.js'))
+    gulp.src(utils.destinationPath('test/**/*.spec.js'))
     .pipe(mocha({
         timeout: MOCHA_TIMEOUT
     }))
@@ -102,17 +101,17 @@ gulp.task('test', done => {
     })
 })
 
-function _getCompiler (configPath) {
+function _getWebpackConfig (configPath) {
     let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + configPath));
     let customWebpackConfigPath = utils.destinationPath(configPath);
 
     if (destinationType == 'component') {
         let name = utils.camelCase(destinationPkg.name);
         
-        if (NAMESPACE_REX_EXP.text(name)) {
-            originWebpackConfig.library = [RegExp.$1, RegExp.$2];
+        if (NAMESPACE_REX_EXP.test(name)) {
+            originWebpackConfig.output.library = [RegExp.$1, RegExp.$2];
         } else {
-            originWebpackConfig.library = name;
+            originWebpackConfig.output.library = name;
         }
 
     }
@@ -121,11 +120,11 @@ function _getCompiler (configPath) {
         let customWebpackConfig = require(customWebpackConfigPath);
 
         if (utils.isFunction(customWebpackConfig)) {
-            return webpack(customWebpackConfig(originWebpackConfig));
+            return customWebpackConfig(originWebpackConfig);
         } else {
-            return webpack(customWebpackConfig);
+            return customWebpackConfig;
         }
     } else {
-        return webpack(originWebpackConfig);
+        return originWebpackConfig;
     }
 }

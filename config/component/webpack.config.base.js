@@ -12,7 +12,6 @@ module.exports = {
     output: {
         path: utils.destinationPath('./build'),
         filename: 'bundle.js',
-        library: 'TEMP',
         libraryTarget: 'umd'
     },
 
@@ -28,7 +27,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: [/node_modules/, /lib/],
+                exclude: [/node_modules/, /lib/, /libs/],
                 use: [
                     {
                         loader: 'es3ify-loader'
