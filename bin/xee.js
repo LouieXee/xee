@@ -58,5 +58,7 @@ function detectLatestVersion () {
         } else {
             console.log(chalk.green.bold('Your xee is the latest version!'))
         }
+    }, () => {
+        conosle.log(chalk.red.bold('Fail to check the latest version of xee'))
     })
 }
