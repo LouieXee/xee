@@ -2,7 +2,12 @@
   "name": "<%= name%>",
   "version": "<%= version%>",
   "description": "<%= desc%>",
-  "xeeType": "component",
+  "xeeConfig": {
+    "type": "component",
+    "testPath": "",
+    "releasePath": "",
+    "html": ""
+  },
   "main": "build/index.js",
   "author": "<%= author%>",
   "license": "ISC"

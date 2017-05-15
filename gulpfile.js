@@ -17,13 +17,14 @@ const ansiHtml = require('ansi-html');
 
 const utils = require('./utils');
 const destinationPkg = require(utils.destinationPath('./package.json'));
-const destinationType = destinationPkg.xeeType;
+const destinationType = destinationPkg.xeeConfig.type;
 
 const MOCHA_TIMEOUT = 5000;
 const TYPE_PATH_CONFIG = {
     component: './config/component/',
     project: './config/project/'
 };
+const NAMESPACE_REX_EXP = /^@(\w+)\/(\w+)$/;
 
 gulp.task('clean', () => {
     return del([utils.destinationPath('./build/**/*')]);
@@ -105,7 +106,16 @@ function _getCompiler (configPath) {
     let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + configPath));
     let customWebpackConfigPath = utils.destinationPath(configPath);
 
-    destinationType == 'component' && (originWebpackConfig.output.library = destinationPkg.name);
+    if (destinationType == 'component') {
+        let name = utils.camelCase(destinationPkg.name);
+        
+        if (NAMESPACE_REX_EXP.text(name)) {
+            originWebpackConfig.library = [RegExp.$1, RegExp.$2];
+        } else {
+            originWebpackConfig.library = name;
+        }
+
+    }
 
     if (fs.existsSync(customWebpackConfigPath)) {
         let customWebpackConfig = require(customWebpackConfigPath);

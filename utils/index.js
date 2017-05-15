@@ -24,6 +24,12 @@ module.exports = {
             stdio: 'inherit',
             stderr: 'inherit'
         })
+    },
+
+    camelCase (str) {
+        return str.replace(/-([a-z])/g, function () {
+            return RegExp.$1.toUpperCase();
+        })
     }
 
 };
