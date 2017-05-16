@@ -15,6 +15,9 @@ const name = {
     component: 'Component',
     project: 'Project'
 };
+const DEFAULT_GIT_IGNORE = `node_modules
+npm-debug.log
+`;
 
 module.exports = function generate (type) {
     inquirer.prompt([
@@ -76,10 +79,7 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/component/development'), utils.destinationPath('development'));
             fs.copy(utils.currentPath('./template/component/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copyTpl(utils.currentPath('./template/component/package.json'), utils.destinationPath('package.json'), answer);
-            fs.write(utils.destinationPath('.gitignore'), `
-                node_modules
-                npm-debug.log
-            `);
+            fs.write(utils.destinationPath('.gitignore'), DEFAULT_GIT_IGNORE);
 
         } else if (type == 'project') {
 
@@ -89,10 +89,7 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/project/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copyTpl(utils.currentPath('./template/project/package.json'), utils.destinationPath('package.json'), answer);
             fs.copyTpl(utils.currentPath('./template/project/index.html'), utils.destinationPath('index.html'), answer);
-            fs.write(utils.destinationPath('.gitignore'), `
-                node_modules
-                npm-debug.log
-            `);
+            fs.write(utils.destinationPath('.gitignore'), DEFAULT_GIT_IGNORE);
 
         }
 

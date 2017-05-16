@@ -3,10 +3,7 @@
   "version": "<%= version%>",
   "description": "<%= desc%>",
   "xeeConfig": {
-    "type": "project",
-    "testPath": "",
-    "releasePath": "",
-    "html": ""
+    "type": "project"
   },
   "main": "build/index.js",
   "author": "<%= author%>",
