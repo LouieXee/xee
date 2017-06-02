@@ -94,7 +94,9 @@ module.exports = function generate (type) {
         }
 
         fs.commit(function () {
+            console.log('');
             console.log(chalk.green.bold('Generating files successfully!'));
+            console.log('');
         });
     })
 

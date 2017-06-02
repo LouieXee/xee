@@ -56,11 +56,11 @@ module.exports = {
                 ]
             },
             {
-                test: /\.styl$/,
+                test: /\.less$/,
                 exclude: /node_modules/,
                 loader: extractCss.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader', 'autoprefixer-loader?browsers=last 2 version', 'stylus-loader']
+                    use: ['css-loader', 'autoprefixer-loader?browsers=last 2 version', 'less-loader']
                 })
             },
             {

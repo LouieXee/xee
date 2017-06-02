@@ -46,6 +46,7 @@ gulp.task('serve', () => {
                 }
             })
         ],
+        notify: false,
         plugins: [require('bs-fullscreen-message')]
     }, () => {
         compiler.plugin('done', stats => {
