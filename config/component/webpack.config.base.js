@@ -27,7 +27,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: [/node_modules/, /lib/, /libs/],
+                exclude: [/node_modules/, /lib/],
                 use: [
                     {
                         loader: 'es3ify-loader'
@@ -35,12 +35,17 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                            presets: ['es2015'].map((item) => {
-                                return require.resolve('babel-preset-' + item);
-                            }),
-                            plugins: ['add-module-exports'].map((item) => {
-                                return require.resolve('babel-plugin-' + item);
-                            })
+                            presets: [
+                                [
+                                    require.resolve('babel-preset-es2015'),
+                                    {
+                                        'loose': true
+                                    }
+                                ]
+                            ],
+                            plugins: [
+                                require.resolve('babel-plugin-add-module-exports')
+                            ]
                         }
                     },
                     {
