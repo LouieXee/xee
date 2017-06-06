@@ -3,6 +3,6 @@
 const moduleDetect = require('../detective.js');
 
 module.exports = moduleDetect({
-    module: 'stylus',
-    tips: 'Stylus should be installed globally'
+    module: 'less',
+    tips: 'Less should be installed globally'
 });

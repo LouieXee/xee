@@ -8,6 +8,7 @@ const memFs = require('mem-fs');
 const editor = require('mem-fs-editor');
 
 const utils = require('../utils');
+const pkg = require('../package.json');
 
 const fs = editor.create(memFs.create());
 
@@ -85,8 +86,8 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/project/res'), utils.destinationPath('res'));
             fs.copy(utils.currentPath('./template/project/data'), utils.destinationPath('data'));
             fs.copy(utils.currentPath('./template/project/.eslintrc'), utils.destinationPath('.eslintrc'));
-            fs.copy(utils.currentPath('./template/project/README.md'), utils.destinationPath('README.md'));
             fs.copy(utils.currentPath('./template/project/.gitignoreTmpl'), utils.destinationPath('.gitignore'));
+            fs.copy(utils.currentPath('./template/project/README.md'), utils.destinationPath('README.md'));
             fs.copyTpl(utils.currentPath('./template/project/package.json'), utils.destinationPath('package.json'), answer);
             fs.copyTpl(utils.currentPath('./template/project/index.html'), utils.destinationPath('index.html'), answer);
 

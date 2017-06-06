@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = [
-    require('./stylus.js'),
+    require('./less.js'),
     require('./eslint.js')
 ];
