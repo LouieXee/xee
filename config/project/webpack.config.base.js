@@ -54,10 +54,10 @@ module.exports = {
                                 require.resolve('babel-plugin-add-module-exports')
                             ]
                         }
-                    },
-                    {
-                        loader: 'eslint-loader'
                     }
+                    // {
+                    //     loader: 'eslint-loader'
+                    // }
                 ]
             },
             {
@@ -65,7 +65,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: extractCss.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader', 'autoprefixer-loader?browsers=last 2 version', 'less-loader']
+                    use: ['css-loader', 'postcss-loader?browsers=last 2 version', 'less-loader']
                 })
             },
             {

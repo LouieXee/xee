@@ -1,6 +1,5 @@
 'use strict';
 
-const exec = require('child_process').exec;
 const path = require('path');
 const fs = require('fs');
 
@@ -36,6 +35,8 @@ gulp.task('serve', () => {
     
     bs.init({
         server: true,
+        notify: false,
+        online: false,
         middleware: [
             webpackDevMiddleware(compiler, {
                 noInfo: false,
@@ -46,33 +47,31 @@ gulp.task('serve', () => {
                 }
             })
         ],
-        notify: false,
         plugins: [require('bs-fullscreen-message')]
-    }, () => {
-        compiler.plugin('done', stats => {
-            if (stats.hasErrors() || stats.hasWarnings()) {
-                return bs.sockets.emit('fullscreen:message', {
-                    title: 'Webpack Error:',
-                    body: ansiHtml(stats.toString()),
-                    timeout: 100000
-                });
-            }
-            bs.reload();
-        })
     })
 
+    compiler.plugin('done', stats => {
+        if (stats.hasErrors() || stats.hasWarnings()) {
+            return bs.sockets.emit('fullscreen:message', {
+                title: 'Webpack Error:',
+                body: ansiHtml(stats.toString()),
+                timeout: 100000
+            });
+        }
+        bs.reload();
+    })
 });
 
 gulp.task('build', ['clean'], () => {
-    console.log(chalk.green.bold('start webpack-ing your files...'));
-
-    webpack(_getWebpackConfig('webpack.config.publish.js')).run(() => {
-        console.log(chalk.green.bold('webpack your files successfully!'));
+    webpack(_getWebpackConfig('webpack.config.publish.js')).run((err, stats) => {
+        console.log(stats.toString({
+            colors: true
+        }))
     })
 })
 
 gulp.task('es3', ['clean'], () => {
-    console.log(chalk.green.bold('start es3ify-ing your files...'));
+    console.log('');
     return gulp.src(utils.destinationPath('./src/**/*.js'))
         .pipe(babel({
             presets: ['es2015'].map((item) => {
@@ -84,8 +83,15 @@ gulp.task('es3', ['clean'], () => {
         }))
         .pipe(es3ify())
         .pipe(gulp.dest('build'))
+        .on('data', function (chunk) {
+            console.log(chalk.green.bold(chunk.history[0]))
+        })
         .on('end', function () {
-            console.log(chalk.green.bold('es3ify your files successfully!'));
+            console.log('')
+            console.log('es3ify your files successfully!');
+        })
+        .on('error', e => {
+            console.error(e);
         });
 })
 
@@ -103,9 +109,18 @@ gulp.task('test', done => {
 })
 
 function _getWebpackConfig (configPath) {
-    let originWebpackConfig = require(utils.currentPath( TYPE_PATH_CONFIG[destinationType] + configPath));
+    let originBaseWebpackConfig = require(utils.currentPath(TYPE_PATH_CONFIG[destinationType] + 'webpack.config.base.js'));
+    let customBaseWebpackConfigPath = utils.destinationPath('webpack.config.base.js');
+
+    // 如果有base config文件则覆盖原来的base config文件
+    if (fs.existsSync(customBaseWebpackConfigPath)) {
+        handleConfig(require(customBaseWebpackConfigPath), originBaseWebpackConfig);
+    }
+    
+    let originWebpackConfig = require(utils.currentPath(TYPE_PATH_CONFIG[destinationType] + configPath));
     let customWebpackConfigPath = utils.destinationPath(configPath);
 
+    // 满足一定命名格式则声明组件命名空间
     if (destinationType == 'component') {
         let name = utils.camelCase(destinationPkg.name);
         
@@ -114,18 +129,20 @@ function _getWebpackConfig (configPath) {
         } else {
             originWebpackConfig.output.library = name;
         }
-
     }
 
+    // 如果有目标config文件则覆盖原来的目标config文件
     if (fs.existsSync(customWebpackConfigPath)) {
-        let customWebpackConfig = require(customWebpackConfigPath);
+        return handleConfig(require(customWebpackConfigPath), originWebpackConfig);
+    }
 
-        if (utils.isFunction(customWebpackConfig)) {
-            return customWebpackConfig(originWebpackConfig);
-        } else {
-            return customWebpackConfig;
+    return originWebpackConfig;
+
+    function handleConfig (customConfig, originConfig) {
+        if (utils.isFunction(customConfig)) {
+            return customConfig(originConfig);
+        } else if (utils.isObject(customConfig)) {
+            return customConfig;
         }
-    } else {
-        return originWebpackConfig;
     }
 }

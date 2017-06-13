@@ -4,7 +4,6 @@
 
 const pkg = require('../package.json');
 const generate = require ('../template');
-const detect = require('../detective');
 const utils = require('../utils');
 
 const commander = require('commander');
@@ -33,10 +32,7 @@ commander
     .command('detect')
     .description('detect the dependencies on your system')
     .action(function () {
-        detectLatestVersion()
-        .then(() => {
-            detect();
-        })
+        detectLatestVersion();
     });
 
 commander
@@ -47,9 +43,7 @@ commander.parse(process.argv);
 
 function detectLatestVersion () {
     
-    console.log('');
-    console.log(chalk.blue.bold('Detecting if xee has a new version'));
-    console.log('');
+    console.log(chalk.blue.bold('Detecting if xee has a new version...'));
 
     return latestVersion('xee').then(latest => {
         if (semver.lt(pkg.version, latest)) {

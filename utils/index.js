@@ -11,6 +11,10 @@ module.exports = {
         return _getType(target) == '[object Function]';
     },
 
+    isObject (target) {
+        return _getType(target) == '[object Object]';
+    },
+
     currentPath (target) {
         return path.resolve(__dirname, '../', target);
     },

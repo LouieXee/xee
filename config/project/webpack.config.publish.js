@@ -15,6 +15,7 @@ const baseConfig = require('./webpack.config.base.js');
         output: {
             keep_quoted_props: true
         },
+        // comments: false,
         mangle: {
             screw_ie8: false,
             except: ['e']
