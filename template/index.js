@@ -75,7 +75,6 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/component/res'), utils.destinationPath('res'));
             fs.copy(utils.currentPath('./template/component/test'), utils.destinationPath('test'));
             fs.copy(utils.currentPath('./template/component/development'), utils.destinationPath('development'));
-            fs.copy(utils.currentPath('./template/component/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copy(utils.currentPath('./template/component/.gitignoreTmpl'), utils.destinationPath('.gitignore'));
             fs.copy(utils.currentPath('./template/component/.npmignoreTmpl'), utils.destinationPath('.npmignore'));
             fs.copy(utils.currentPath('./template/component/README.md'), utils.destinationPath('README.md'));
@@ -86,7 +85,6 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/project/src'), utils.destinationPath('src'));
             fs.copy(utils.currentPath('./template/project/res'), utils.destinationPath('res'));
             fs.copy(utils.currentPath('./template/project/data'), utils.destinationPath('data'));
-            fs.copy(utils.currentPath('./template/project/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copy(utils.currentPath('./template/project/.gitignoreTmpl'), utils.destinationPath('.gitignore'));
             fs.copy(utils.currentPath('./template/project/.npmignoreTmpl'), utils.destinationPath('.npmignore'));
             fs.copy(utils.currentPath('./template/project/README.md'), utils.destinationPath('README.md'));
