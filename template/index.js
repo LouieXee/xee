@@ -77,6 +77,7 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/component/development'), utils.destinationPath('development'));
             fs.copy(utils.currentPath('./template/component/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copy(utils.currentPath('./template/component/.gitignoreTmpl'), utils.destinationPath('.gitignore'));
+            fs.copy(utils.currentPath('./template/component/.npmignoreTmpl'), utils.destinationPath('.npmignore'));
             fs.copy(utils.currentPath('./template/component/README.md'), utils.destinationPath('README.md'));
             fs.copyTpl(utils.currentPath('./template/component/package.json'), utils.destinationPath('package.json'), answer);
 
@@ -87,6 +88,7 @@ module.exports = function generate (type) {
             fs.copy(utils.currentPath('./template/project/data'), utils.destinationPath('data'));
             fs.copy(utils.currentPath('./template/project/.eslintrc'), utils.destinationPath('.eslintrc'));
             fs.copy(utils.currentPath('./template/project/.gitignoreTmpl'), utils.destinationPath('.gitignore'));
+            fs.copy(utils.currentPath('./template/project/.npmignoreTmpl'), utils.destinationPath('.npmignore'));
             fs.copy(utils.currentPath('./template/project/README.md'), utils.destinationPath('README.md'));
             fs.copyTpl(utils.currentPath('./template/project/package.json'), utils.destinationPath('package.json'), answer);
             fs.copyTpl(utils.currentPath('./template/project/index.html'), utils.destinationPath('index.html'), answer);

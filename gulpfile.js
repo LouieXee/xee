@@ -84,7 +84,7 @@ gulp.task('es3', ['clean'], () => {
         .pipe(es3ify())
         .pipe(gulp.dest('build'))
         .on('data', function (chunk) {
-            console.log(chalk.green.bold(chunk.history[0]))
+            console.log(chalk.green.bold(chunk.history[1]))
         })
         .on('end', function () {
             console.log('')
